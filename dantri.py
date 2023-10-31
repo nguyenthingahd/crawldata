@@ -44,6 +44,11 @@ if __name__ == "__main__":
     str = f.read()
     lst = str.split("\n")
     # url = "https://dantri.com.vn/xa-hoi.htm"
+    print(lst)
     baseUrl = "https://dantri.com.vn/"
     for url in lst:
+        #url = https://dantri.com.vn/du-lich.htm
         crawl(baseUrl, url)
+        for i in range (2, 10):
+            urll = url[:-4] + '/trang-{}.htm'.format(i)
+            crawl(baseUrl, urll)
