@@ -4,26 +4,22 @@ listlink = []
 def crawl(baseUrl, url):
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
-    titles = soup.findAll('div', class_='article-title')
-    # print(titles)
+    titles = soup.findAll('div', class_='title')
     links = [link.find('a').attrs["href"] for link in titles]
+    # import pdb; pdb.set_trace()
     for link in links:
         if link not in listlink:
             listlink.append(link)
             try:
                 print(link)
-                news = requests.get(baseUrl + link)
+                news = requests.get(link)
                 soup = BeautifulSoup(news.content, "html.parser")
-                body = soup.find("div", class_="singular-content")
+                body = soup.find("div", id="nContent")
                 text = ""
                 content = body.findChildren("p", recursive=False)
-                text_file = open("dantri.txt", "a")
+                text_file = open("output.txt", "a")
                 for i in range(0, len(content)):
                     str = content[i].text
-                    # for j in range(1, len(str)):
-                    #     if str[j] == '.' and str[j-1].isnumeric() and str[j+1].isnumeric():
-                    #         print(str[j])
-                    #         str[j] = ""
                     sentences = str.split(".")
                     for text in sentences:
                         if len(text) > 1 and len(text) < 190:
@@ -32,23 +28,16 @@ def crawl(baseUrl, url):
                             text = text.strip()
                             text = text + ".\n"
                             text_file.write(text)
-                    # text += str
-                # text = text.replace("\n", " ")
-                # text_file = open("dantri.txt", "a")
-                # text_file.write(text)
                 text_file.close()
             except:
                 pass
 if __name__ == "__main__":
-    f = open("urldt.txt")
+    f = open("url.txt")
     str = f.read()
     lst = str.split("\n")
-    # url = "https://dantri.com.vn/xa-hoi.htm"
-    print(lst)
-    baseUrl = "https://dantri.com.vn/"
+    baseUrl = "https://www.newsinlevels.com"
     for url in lst:
-        #url = https://dantri.com.vn/du-lich.htm
         crawl(baseUrl, url)
-        for i in range (2, 10):
-            urll = url[:-4] + '/trang-{}.htm'.format(i)
+        for i in range(2, 10):
+            urll = f"{baseUrl}/page/{i}/"  # Use f-string to format the URL
             crawl(baseUrl, urll)
