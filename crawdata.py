@@ -23,8 +23,6 @@ def crawl(baseUrl, url):
                     sentences = str.split(".")
                     for text in sentences:
                         if len(text) > 1 and len(text) < 190:
-                            text = text.replace("- ", "")
-                            text = text.replace("\"", "")
                             text = text.strip()
                             text = text + ".\n"
                             text_file.write(text)
@@ -38,6 +36,6 @@ if __name__ == "__main__":
     baseUrl = "https://www.newsinlevels.com"
     for url in lst:
         crawl(baseUrl, url)
-        for i in range(2, 10):
+        for i in range(2, 400):
             urll = f"{baseUrl}/page/{i}/"  # Use f-string to format the URL
             crawl(baseUrl, urll)
