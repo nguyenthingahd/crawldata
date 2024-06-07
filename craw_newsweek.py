@@ -4,16 +4,18 @@ listlink = []
 def crawl(baseUrl, url):
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
-    titles = soup.findAll('div', class_='title')
+    titles = soup.findAll('h3', class_='verticalPost__main-title vnn-title title-bold')
     links = [link.find('a').attrs["href"] for link in titles]
+    
     for link in links:
         if link not in listlink:
             listlink.append(link)
             try:
                 print(link)
+                import pdb; pdb.set_trace()
                 news = requests.get(link)
                 soup = BeautifulSoup(news.content, "html.parser")
-                body = soup.find("div", id="nContent")
+                body = soup.find("div", class_="page")
                 text = ""
                 content = body.findChildren("p", recursive=False)
                 text_file = open("data.txt", "a")
@@ -32,10 +34,10 @@ if __name__ == "__main__":
     f = open("url.txt")
     str = f.read()
     lst = str.split("\n")
-    baseUrl = "https://www.newsinlevels.com"
+    baseUrl = "https://vietnamnet.vn/en"
     for url in lst:
         crawl(baseUrl, url)
-        for i in range(300, 400):
-            urll = f"{baseUrl}/page/{i}/"  # Use f-string to format the URL
+        for i in range(2, 10):
+            urll = f"{baseUrl}/-page{i}"  # Use f-string to format the URL
             crawl(baseUrl, urll)
-# https://www.newsinlevels.com/products/goosebumps-level-3/
+
